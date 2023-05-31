@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { useAxios, REQ_TYPES } from "../hooks/useAxios";
 
-const EditMovieForm = ({ setMovies }) => {
+const AddMovieForm = ({ setMovies }) => {
   const { push } = useHistory();
-  const { id } = useParams();
   const [getMovie, movie, loading, error] = useAxios([]);
   const [postMovie, postedMovie, postLoading, postError] = useAxios();
-  const [editedMovie, setMovie] = useState({
+  const [addedMovie, setMovie] = useState({
     title: "",
     director: "",
     genre: "",
@@ -17,15 +16,9 @@ const EditMovieForm = ({ setMovies }) => {
     description: "",
   });
 
-  useEffect(() => {
-    getMovie({ endpoint: `movies/${id}`, reqType: REQ_TYPES.GET }).then((res) => {
-      setMovie(res);
-    });
-  }, [id]);
-
   const handleChange = (e) => {
     setMovie({
-      ...editedMovie,
+      ...addedMovie,
       [e.target.name]: e.target.value,
     });
   };
@@ -33,18 +26,18 @@ const EditMovieForm = ({ setMovies }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     postMovie({
-      endpoint: `movies/${id}`,
-      reqType: REQ_TYPES.PUT,
-      payload: editedMovie,
+      endpoint: `movies`,
+      reqType: REQ_TYPES.POST,
+      payload: addedMovie,
     }).then((res) => {
       getMovie({ endpoint: `movies`, reqType: REQ_TYPES.GET }).then((res) => {
         setMovies(res);
       });
-      push(`/movies/${movie.id}`);
+      push(`/movies`);
     });
   };
 
-  const { title, director, genre, metascore, description } = editedMovie;
+  const { title, director, genre, metascore, description } = addedMovie;
 
   if (loading) {
     return <div className="bg-white rounded-md shadow flex-1">Loading...</div>;
@@ -54,9 +47,7 @@ const EditMovieForm = ({ setMovies }) => {
     <div className="bg-white rounded-md shadow flex-1">
       <form onSubmit={handleSubmit}>
         <div className="p-5 pb-3 border-b border-zinc-200">
-          <h4 className="text-xl font-bold">
-            Düzenleniyor <strong>{movie.title}</strong>
-          </h4>
+          <h4 className="text-xl font-bold">Film Ekle</h4>
         </div>
 
         <div className="px-5 py-3">
@@ -95,4 +86,4 @@ const EditMovieForm = ({ setMovies }) => {
   );
 };
 
-export default EditMovieForm;
+export default AddMovieForm;

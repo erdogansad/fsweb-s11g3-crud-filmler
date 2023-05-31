@@ -4,7 +4,7 @@ import { Link, useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 
 const Movie = (props) => {
-  const { addToFavorites } = props;
+  const { addToFavorites, deleteMovie, favoriteMovies } = props;
 
   const [movie, setMovie] = useState("");
 
@@ -51,16 +51,13 @@ const Movie = (props) => {
       </div>
 
       <div className="px-5 py-3 border-t border-zinc-200 flex justify-end gap-2">
-        <button className="myButton bg-blue-600 hover:bg-blue-500 ">
-          Favorilere ekle
+        <button onClick={() => addToFavorites(movie)} className="myButton bg-blue-600 hover:bg-blue-500 ">
+          {favoriteMovies.find((mov) => mov.id === movie.id) ? "Favorilerden sil" : "Favorilere ekle"}
         </button>
-        <Link
-          to={`/movies/edit/${movie.id}`}
-          className="myButton bg-blue-600 hover:bg-blue-500"
-        >
+        <Link to={`/movies/edit/${movie.id}`} className="myButton bg-blue-600 hover:bg-blue-500">
           Edit
         </Link>
-        <button type="button" className="myButton bg-red-600 hover:bg-red-500">
+        <button onClick={() => deleteMovie(movie.id)} type="button" className="myButton bg-red-600 hover:bg-red-500">
           Sil
         </button>
       </div>
